@@ -11,7 +11,6 @@
 # Step 1: You must download the elevation BIL zipfile at 4km resolution from the PRISM data portal https://www.prism.oregonstate.edu/normals/
 # Step 2: Save the zipfile to the data directory in this repository
 # Step 3: Set your own data paths to data in 'Paths.R' file
-# Step 4: Change the path in the `source()` call on line 32 from "Paths_private.R" to "Paths.R"
 # ----------------------------------------------------------------- #
 
 ############
