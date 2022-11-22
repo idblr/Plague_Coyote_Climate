@@ -34,3 +34,23 @@ vignettes/*.pdf
 
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
+
+# Mac OSX
+*.DS_Store
+
+# Sandbox
+sandbox.R
+
+# README htmls
+README.html
+
+# Data
+*.rds
+*.Rdata
+data/prismtmp
+
+# Data paths for code
+Paths_private.R
+
+# Figures
+figures/*.png
