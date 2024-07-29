@@ -1,6 +1,5 @@
 # ----------------------------------------------------------------------------------------------- #
-# Manuscript Supplemental Figure 7
-# ----------------------------------------------------------------------------------------------- #
+# Manuscript Supplemental Figure 8
 # 
 # Created by: Ian Buller, Ph.D., M.A. (GitHub: @idblr)
 # Created on: 2022-05-20
@@ -16,7 +15,7 @@
 # PREPARATION #
 # ----------- #
 
-# Step 1: You must download the elevation BIL zipfile at 4-km resolution from the PRISM data portal https://www.prism.oregonstate.edu/normals/
+# Step 1: You must download the elevation BIL zipfile at 4km resolution from the PRISM data portal https://www.prism.oregonstate.edu/normals/
 # Step 2: Save the zipfile to the data directory in this repository
 # Step 3: Set your own data paths to data in 'Paths.R' file
 
@@ -49,169 +48,175 @@ source(file.path('code', 'Preparation.R'))
 conserved_univar <- out_univar[out_univar$outside == FALSE, ]
 
 # --------------------- #
-# SUPPLEMENTAL Figure 7 #
+# SUPPLEMENTAL Figure 8 #
 # --------------------- #
 
 f <- 2.5 # Graphical expansion factor
 
-png(file = file.path('figures', 'SupplementalFigure7.png'), width = 6*f, height = 7*f, units = 'in', res = 200*f)
+png(file = file.path('figures', 'SupplementalFigure8.png'), width = 6*f, height = 7*f, units = 'in', res = 200*f)
 layout(matrix(c(1,2,3,4,5,6,7,8,9,9), ncol = 2, byrow = TRUE), heights = c(0.23,0.23,0.23,0.23,0.08))
 par(pty = 'm', oma = c(0, 0, 0, 0), mar = c(5.1, 6.1, 1.1, 2.1), family = 'LM Roman 10')
 # Precipitation
 plot.gam(
-  gam(rr ~ s(ppt), data = conserved_univar),
+  gam(pval ~ s(ppt), data = conserved_univar),
   residuals = FALSE,
   all.terms = FALSE,
   shade = TRUE,
   col = 'black',
   shade.col = 'grey80',
   xlab = 'precipitation (millimeters)',
-  ylab = expression('log'~hat('RR')['coyote+']),
+  ylab = 'p-value',
   select = 1,
-  shift = coef(gam(rr ~ s(ppt), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr) * 1.5),
+  shift = coef(gam(pval ~ s(ppt), data = conserved_univar))[1],
+  ylim = c(-0.1, 1.1),
   cex = 1*f,
   cex.axis = 0.8*f,
   cex.lab = 1*f
 )
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.025, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.975, col = 'black', lwd = 1*f, lty = 2)
 # Maximum Temperature
 plot.gam(
-  gam(rr ~ s(tmax), data = conserved_univar),
+  gam(pval ~ s(tmax), data = conserved_univar),
   residuals = FALSE,
   all.terms = TRUE,
   shade = TRUE,
   col = 'black',
   shade.col = 'grey80',
   xlab = 'maximum temperature (degrees Celsius)',
-  ylab = expression('log'~hat('RR')['coyote+']),
+  ylab = 'p-value',
   select = 1,
-  shift = coef(gam(rr ~ s(tmax), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
+  shift = coef(gam(pval ~ s(tmax), data = conserved_univar))[1],
+  ylim = c(-0.1, 1.1),
   cex = 1*f,
   cex.axis = 0.8*f,
   cex.lab = 1*f
 )
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.025, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.975, col = 'black', lwd = 1*f, lty = 2)
 # Mean Temperature
 plot.gam(
-  gam(rr ~ s(tmean), data = conserved_univar),
+  gam(pval ~ s(tmean), data = conserved_univar),
   residuals = FALSE,
   all.terms = TRUE,
   shade = TRUE,
   col = 'black',
   shade.col = 'grey80',
   xlab = 'mean temperature (degrees Celsius)',
-  ylab = expression('log'~hat('RR')['coyote+']),
+  ylab = 'p-value',
   select = 1,
-  shift = coef(gam(rr ~ s(tmean), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
+  shift = coef(gam(pval ~ s(tmean), data = conserved_univar))[1],
+  ylim = c(-0.1, 1.1),
   cex = 1*f,
   cex.axis = 0.8*f,
   cex.lab = 1*f
 )
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.025, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.975, col = 'black', lwd = 1*f, lty = 2)
 # Minimum Temperature
 plot.gam(
-  gam(rr ~ s(tmin), data = conserved_univar),
+  gam(pval ~ s(tmin), data = conserved_univar),
   residuals = FALSE,
   all.terms = TRUE,
   shade = TRUE,
   col = 'black',
   shade.col = 'grey80',
   xlab = 'minimum temperature (degrees Celsius)',
-  ylab = expression('log'~hat('RR')['coyote+']),
+  ylab = 'p-value',
   select = 1,
-  shift = coef(gam(rr ~ s(tmin),data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
+  shift = coef(gam(pval ~ s(tmin),data = conserved_univar))[1],
+  ylim = c(-0.1, 1.1),
   cex = 1*f,
   cex.axis = 0.8*f,
   cex.lab = 1*f
 )
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.025, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.975, col = 'black', lwd = 1*f, lty = 2)
 # Dew Point Temperature
 plot.gam(
-  gam(rr ~ s(tdmean), data = conserved_univar),
+  gam(pval ~ s(tdmean), data = conserved_univar),
   residuals = FALSE,
   all.terms = TRUE,
   shade = TRUE,
   col = 'black',
   shade.col = 'grey80',
   xlab = 'dew point temperature (degrees Celsius)',
-  ylab = expression('log'~hat('RR')['coyote+']),
+  ylab = 'p-value',
   select = 1,
-  shift = coef(gam(rr ~ s(tdmean), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
+  shift = coef(gam(pval ~ s(tdmean), data = conserved_univar))[1],
+  ylim = c(-0.1, 1.1),
   cex = 1*f,
   cex.axis = 0.8*f,
   cex.lab = 1*f
 )
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.025, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.975, col = 'black', lwd = 1*f, lty = 2)
 # Maximum Vapor Pressure Deficit
 plot.gam(
-  gam(rr ~ s(vpdmax), data = conserved_univar),
+  gam(pval ~ s(vpdmax), data = conserved_univar),
   residuals = FALSE,
   all.terms = TRUE,
   shade = TRUE,
   col = 'black',
   shade.col = 'grey80',
   xlab = 'maximum vapor pressure deficit (hectopascal)',
-  ylab = expression('log'~hat('RR')['coyote+']),
+  ylab = 'p-value',
   select = 1,
-  shift = coef(gam(rr ~ s(vpdmax), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
+  shift = coef(gam(pval ~ s(vpdmax), data = conserved_univar))[1],
+  ylim = c(-0.1, 1.1),
   cex = 1*f,
   cex.axis = 0.8*f,
   cex.lab = 1*f
 )
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.025, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.975, col = 'black', lwd = 1*f, lty = 2)
 # Maximum Vapor Pressure Deficit
 plot.gam(
-  gam(rr ~ s(vpdmin), data = conserved_univar),
+  gam(pval ~ s(vpdmin), data = conserved_univar),
   residuals = FALSE,
   all.terms = TRUE,
   shade = TRUE,
   col = 'black',
   shade.col = 'grey80',
   xlab = 'minimum vapor pressure deficit (hectopascal)',
-  ylab = expression('log'~hat('RR')['coyote+']),
+  ylab = 'p-value',
   select = 1,
-  shift = coef(gam(rr ~ s(vpdmin), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
+  shift = coef(gam(pval ~ s(vpdmin), data = conserved_univar))[1],
+  ylim = c(-0.1, 1.1),
   cex = 1*f,
   cex.axis = 0.8*f,
   cex.lab = 1*f
 )
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.025, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.975, col = 'black', lwd = 1*f, lty = 2)
 # Elevation
 plot.gam(
-  gam(rr ~ s(elev), data = conserved_univar),
+  gam(pval ~ s(elev), data = conserved_univar),
   residuals = FALSE,
   all.terms = TRUE,
   shade = TRUE,
   col = 'black',
   shade.col = 'grey80',
   xlab = 'elevation (meters)',
-  ylab = expression('log'~hat('RR')['coyote+']),
+  ylab = 'p-value',
   select = 1,
-  shift = coef(gam(rr ~ s(elev), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
+  shift = coef(gam(pval ~ s(elev), data = conserved_univar))[1],
+  ylim = c(-0.1, 1.1),
   cex = 1*f,
   cex.axis = 0.8*f,
   cex.lab = 1*f
 )
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.025, col = 'black', lwd = 1*f, lty = 2)
+abline(h = 0.975, col = 'black', lwd = 1*f, lty = 2)
 
 plot.new()
 legend(
   x = 'top',
   horiz = TRUE,
   inset = 0,
-  legend = c(
-    expression('null log'~hat('RR')['coyote+']~'(reference)'),
-    'univariate generalized additive model',
-    '95% confidence interval'
-  ),
+  legend = c('two-tailed 0.05 alpha level (reference)',
+             'univariate generalized additive model',
+             '95% confidence interval'),
   lty = c(2, 1, NA),
   pch = c(NA, NA, 15),
   col = c('black', 'black', 'grey80'),

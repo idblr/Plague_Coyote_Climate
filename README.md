@@ -1,9 +1,9 @@
-Multiple “spaces”: using wildlife surveillance, climatic variables, and spatial statistics to identify and map a climatic niche for endemic plague in California, U.S.A. <img src="hex/hex.png" width="120" align="right" />
+Multiple “spaces”: using wildlife surveillance, climatic variables, and spatial statistics to identify and map a climatic niche for endemic plague in California, U.S.A. <img src='hex/hex.png' width='120' align='right' />
 ===================================================
 
 ![license](https://img.shields.io/badge/license-apache-yellow)
 
-**Date repository last updated**: November 22, 2022
+**Date repository last updated**: July 29, 2024
 
 ### Authors
 
@@ -27,35 +27,42 @@ We combine two analytic concepts (ecological niche modeling and spatial point pr
 
 <table>
 <colgroup>
-<col width="20%" />
-<col width="80%" />
+<col width='20%' />
+<col width='80%' />
 </colgroup>
 <thead>
-<tr class="header">
+<tr class='header'>
 <th>Time</th>
 <th>Event</th>
 </tr>
 </thead>
 <tbody>
-<td><p align="center">1981-2010</p></td>
-<td>The <a href="http://prism.oregonstate.edu/">Oregon State University Parameter-elevation Regression on Independent Slopes Model</a> (PRISM) 30-year average climate normals at a 2.5 arcminute (~16 km<sup>2</sup>) resolution (see data availability section below).</td>
+<tr>
+<td><p align='center'>1981-2010</p></td>
+<td>The <a href='http://prism.oregonstate.edu/'>Oregon State University Parameter-elevation Regression on Independent Slopes Model</a> (PRISM) 30-year average climate normals at a 2.5 arcminute (~16 km<sup>2</sup>) resolution (see data availability section below).</td>
 </tr>
-<td><p align="center">1983-2015</p></td>
-<td>The <a href="https://www.cdph.ca.gov/Programs/CID/DCDC/Pages/VBDS.aspx">California Department of Public Health – Vector-Borne Disease Section</a> (CDPH-VBDS) digitized coyote blood samples tested for _Y. pestis_ antibodies (see data availability section below).</td>
+<tr>
+<td><p align='center'>1983-2015</p></td>
+<td>The <a href='https://www.cdph.ca.gov/Programs/CID/DCDC/Pages/VBDS.aspx'>California Department of Public Health – Vector-Borne Disease Section</a> (CDPH-VBDS) digitized coyote blood samples tested for _Y. pestis_ antibodies (see data availability section below).</td>
 </tr>
-<td><p align="center">October 2016</p></td>
+<tr>
+<td><p align='center'>October 2016</p></td>
 <td>Project Initiation</td>
 </tr>
-<td><p align="center">December 2020</p></td>
-<td>The <a href="https://cran.r-project.org/package=envi">envi</a> package in R published to the <a href="https://cran.r-project.org">Comprehensive R Archive Network</a></td>
+<tr>
+<td><p align='center'>December 2020</p></td>
+<td>The <a href='https://cran.r-project.org/package=envi'>envi</a> package in R published to the <a href='https://cran.r-project.org'>Comprehensive R Archive Network</a></td>
 </tr>
-<td><p align="center">TBD</p></td>
+<tr>
+<td><p align='center'>TBD</p></td>
 <td>Initial manuscript submission to _____ for peer-review</td>
 </tr>
-<td><p align="center">TBD</p></td>
+<tr>
+<td><p align='center'>TBD</p></td>
 <td>Manuscript accepted in _____ </td>
 </tr>
-<td><p align="center">TBD</p></td>
+<tr>
+<td><p align='center'>TBD</p></td>
 <td>Manuscript published in _____ </td>
 </tr>
 </tbody>
@@ -63,66 +70,80 @@ We combine two analytic concepts (ecological niche modeling and spatial point pr
 
 ### R Scripts Included In This Repository
 
-This repository includes R scripts used to calculate a spatial relative risk function in  "covariate space" and render the figures found in the following peer-reviewed manuscript:
+This repository includes R scripts used to calculate a spatial relative risk function in  'covariate space' and render the figures found in the following peer-reviewed manuscript:
 
 Buller ID, Hacker GM, Novak MG, Tucker JR, Peterson AT, Waller LA. Multiple “spaces”: using wildlife surveillance, climatic variables, and spatial statistics to identify and map a climatic niche for endemic plague in California, U.S.A. _____ (Submitted)
 
 <table>
 <colgroup>
-<col width="40%" />
-<col width="60%" />
+<col width='40%' />
+<col width='60%' />
 </colgroup>
 <thead>
-<tr class="header">
+<tr class='header'>
 <th>R Script</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<td><p align="center"><code>Paths.R</code></p></td>
+<td><p align='center'><code>Paths.R</code></p></td>
 <td>Example paths for data. Must modify for your own system before beginning.</td>
 </tr>
-<td><p align="center"><code>Preparation.R</code></p></td>
-<td>Load setting, prepare data, run the log RR model, and process the results to generate the figures.</td>
+<tr>
+<td><p align='center'><code>Preparation.R</code></p></td>
+<td>Load settings, prepare data, run the log RR model, and process the results to generate the figures.</td>
 </tr>
-<td><p align="center"><code>Figure1.R</code></p></td>
+<tr>
+<td><p align='center'><code>Figure1.R</code></p></td>
 <td>Generate Figure 1</td>
 </tr>
-<td><p align="center"><code>Figure2.R</code></p></td>
+<tr>
+<td><p align='center'><code>Figure2.R</code></p></td>
 <td>Generate Figure 2</td>
 </tr>
-<td><p align="center"><code>Figure3.R</code></p></td>
+<tr>
+<td><p align='center'><code>Figure3.R</code></p></td>
 <td>Generate Figure 3</td>
 </tr>
-<td><p align="center"><code>Supplemental1.R</code></p></td>
+<tr>
+<td><p align='center'><code>Supplemental1.R</code></p></td>
 <td>Generate Supplemental Figure 1</td>
 </tr>
-<td><p align="center"><code>Supplemental2.R</code></p></td>
+<tr>
+<td><p align='center'><code>Supplemental2.R</code></p></td>
 <td>Generate Supplemental Figure 2</td>
 </tr>
+<tr>
 <td></td>
 <td>Supplemental Figure 3 hand-generated, no code used</td>
 </tr>
-<td><p align="center"><code>Supplemental4.R</code></p></td>
+<tr>
+<td><p align='center'><code>Supplemental4.R</code></p></td>
 <td>Generate Supplemental Figure 4</td>
 </tr>
-<td><p align="center"><code>Supplemental5.R</code></p></td>
-<td>Generate Supplemental Figure 5</td>
+<tr>
+<td></td>
+<td>Supplemental Figure 5 hand-generated, no code used</td>
 </tr>
-<td><p align="center"><code>Supplemental6.R</code></p></td>
+<td><p align='center'><code>Supplemental6.R</code></p></td>
 <td>Generate Supplemental Figure 6</td>
 </tr>
-<td><p align="center"><code>Supplemental7.R</code></p></td>
+<tr>
+<td><p align='center'><code>Supplemental7.R</code></p></td>
 <td>Generate Supplemental Figure 7</td>
 </tr>
+<tr>
+<td><p align='center'><code>Supplemental7.R</code></p></td>
+<td>Generate Supplemental Figure 8</td>
+</tr>
 </tbody>
-<table>
+</table>
 
 The repository also includes the code and resources to create the project hex sticker.
 
 ### Getting Started
 
-* Step 1: You must download the elevation BIL zipfile at 4km resolution from the [PRISM data portal](https://www.prism.oregonstate.edu/normals/)
+* Step 1: You must download the elevation BIL zipfile at 4-km resolution from the [PRISM data portal](https://www.prism.oregonstate.edu/normals/)
 * Step 2: Save the zipfile to the data directory in this repository
 * Step 3: Set your own data paths to data in 'Paths.R' file
 

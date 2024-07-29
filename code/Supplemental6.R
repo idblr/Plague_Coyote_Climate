@@ -6,7 +6,7 @@
 # Created on: 2022-05-20
 #
 # Most recently modified by: @idblr
-# Most recently modified on: 2024-07-01
+# Most recently modified on: 2024-07-29
 #
 # Notes:
 # A) See pre-steps to prepare for model run
@@ -45,179 +45,94 @@ source(file.path('code', 'Preparation.R'))
 # POSTPROCESSING #
 # -------------- #
 
-# Restrict inference to within the inner polygon or 'extent of coyote data' (i.e., more than 'sparse data')
-conserved_univar <- out_univar[out_univar$outside == FALSE, ]
+## ROC AUC
+out_cv_rr <- cvAUC(lapply(out$cv$cv_predictions_rr, unlist), out$cv$cv_labels)
+out_ci_rr <- ci.cvAUC(lapply(out$cv$cv_predictions_rr, unlist), out$cv$cv_labels, confidence = 0.95)
+
+## Precision Recall
+pred_rr <- prediction(lapply(out$cv$cv_predictions_rr, unlist),out$cv$cv_labels)
+perf_rr <- performance(pred_rr, 'prec', 'rec') # PRREC same as 'ppv', 'tpr'
+
+case_locs <- subset(obs_dat, obs_dat$mark == 1)
 
 # --------------------- #
 # SUPPLEMENTAL FIGURE 6 #
 # --------------------- #
 
-f <- 2.5 # Graphical expansion factor
+f <- 2
 
-png(file = file.path('figures', 'SupplementalFigure6.png'), width = 6*f, height = 7*f, units = 'in', res = 200*f)
-layout(matrix(c(1,2,3,4,5,6,7,8,9,9), ncol = 2, byrow = TRUE), heights = c(0.23,0.23,0.23,0.23,0.08))
-par(pty = 'm', oma = c(0, 0, 0, 0), mar = c(5.1, 6.1, 1.1, 2.1), family = 'LM Roman 10')
-# Precipitation
-plot.gam(
-  gam(rr ~ s(ppt), data = conserved_univar),
-  residuals = FALSE,
-  all.terms = FALSE,
-  shade = TRUE,
-  col = 'black',
-  shade.col = 'grey80',
-  xlab = 'precipitation (millimeters)',
-  ylab = expression('log'~hat('RR')['coyote+']),
-  select = 1,
-  shift = coef(gam(rr ~ s(ppt), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr) * 1.5),
-  cex = 1*f,
-  cex.axis = 0.8*f,
-  cex.lab = 1*f
-)
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
-# Maximum Temperature
-plot.gam(
-  gam(rr ~ s(tmax), data = conserved_univar),
-  residuals = FALSE,
-  all.terms = TRUE,
-  shade = TRUE,
-  col = 'black',
-  shade.col = 'grey80',
-  xlab = 'maximum temperature (degrees Celsius)',
-  ylab = expression('log'~hat('RR')['coyote+']),
-  select = 1,
-  shift = coef(gam(rr ~ s(tmax), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
-  cex = 1*f,
-  cex.axis = 0.8*f,
-  cex.lab = 1*f
-)
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
-# Mean Temperature
-plot.gam(
-  gam(rr ~ s(tmean), data = conserved_univar),
-  residuals = FALSE,
-  all.terms = TRUE,
-  shade = TRUE,
-  col = 'black',
-  shade.col = 'grey80',
-  xlab = 'mean temperature (degrees Celsius)',
-  ylab = expression('log'~hat('RR')['coyote+']),
-  select = 1,
-  shift = coef(gam(rr ~ s(tmean), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
-  cex = 1*f,
-  cex.axis = 0.8*f,
-  cex.lab = 1*f
-)
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
-# Minimum Temperature
-plot.gam(
-  gam(rr ~ s(tmin), data = conserved_univar),
-  residuals = FALSE,
-  all.terms = TRUE,
-  shade = TRUE,
-  col = 'black',
-  shade.col = 'grey80',
-  xlab = 'minimum temperature (degrees Celsius)',
-  ylab = expression('log'~hat('RR')['coyote+']),
-  select = 1,
-  shift = coef(gam(rr ~ s(tmin),data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
-  cex = 1*f,
-  cex.axis = 0.8*f,
-  cex.lab = 1*f
-)
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
-# Dew Point Temperature
-plot.gam(
-  gam(rr ~ s(tdmean), data = conserved_univar),
-  residuals = FALSE,
-  all.terms = TRUE,
-  shade = TRUE,
-  col = 'black',
-  shade.col = 'grey80',
-  xlab = 'dew point temperature (degrees Celsius)',
-  ylab = expression('log'~hat('RR')['coyote+']),
-  select = 1,
-  shift = coef(gam(rr ~ s(tdmean), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
-  cex = 1*f,
-  cex.axis = 0.8*f,
-  cex.lab = 1*f
-)
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
-# Maximum Vapor Pressure Deficit
-plot.gam(
-  gam(rr ~ s(vpdmax), data = conserved_univar),
-  residuals = FALSE,
-  all.terms = TRUE,
-  shade = TRUE,
-  col = 'black',
-  shade.col = 'grey80',
-  xlab = 'maximum vapor pressure deficit (hectopascal)',
-  ylab = expression('log'~hat('RR')['coyote+']),
-  select = 1,
-  shift = coef(gam(rr ~ s(vpdmax), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
-  cex = 1*f,
-  cex.axis = 0.8*f,
-  cex.lab = 1*f
-)
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
-# Maximum Vapor Pressure Deficit
-plot.gam(
-  gam(rr ~ s(vpdmin), data = conserved_univar),
-  residuals = FALSE,
-  all.terms = TRUE,
-  shade = TRUE,
-  col = 'black',
-  shade.col = 'grey80',
-  xlab = 'minimum vapor pressure deficit (hectopascal)',
-  ylab = expression('log'~hat('RR')['coyote+']),
-  select = 1,
-  shift = coef(gam(rr ~ s(vpdmin), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
-  cex = 1*f,
-  cex.axis = 0.8*f,
-  cex.lab = 1*f
-)
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
-# Elevation
-plot.gam(
-  gam(rr ~ s(elev), data = conserved_univar),
-  residuals = FALSE,
-  all.terms = TRUE,
-  shade = TRUE,
-  col = 'black',
-  shade.col = 'grey80',
-  xlab = 'elevation (meters)',
-  ylab = expression('log'~hat('RR')['coyote+']),
-  select = 1,
-  shift = coef(gam(rr ~ s(elev), data = conserved_univar))[1],
-  ylim = c(-8, max(conserved_univar$rr)*1.5),
-  cex = 1*f,
-  cex.axis = 0.8*f,
-  cex.lab = 1*f
-)
-abline(h = 0, col = 'black', lwd = 1*f, lty = 2)
+png(file = file.path('figures', 'SupplementalFigure6.png'), width = 8*f, height = 5*f, units = 'in', res = 200*f)
+layout(matrix(c(1, 2), ncol = 2, byrow = TRUE), heights = 1)
+par(mar = c(0.1, 5.1, 3.1, 4.1), pty = 's', family = 'LM Roman 10', cex.axis = 1*f)
 
-plot.new()
+# Supplemental Figure 6A
+plot(
+  out_cv_rr$perf,
+  col = 'black',
+  lty = 3,
+  xlab = 'false positive rate',
+  ylab = 'true positive rate',
+  cex = 1*f,
+  cex.lab = 1*f
+) #Plot fold AUCs
+abline(0, 1, col = 'black', lty = 2, lwd = 1*f)
+plot(out_cv_rr$perf, col = 'black', avg = 'vertical', add = TRUE, lwd = 2*f) #Plot CV AUC
 legend(
-  x = 'top',
-  horiz = TRUE,
+  x = 'bottomright',
   inset = 0,
   legend = c(
-    expression('null log'~hat('RR')['coyote+']~'(reference)'),
-    'univariate generalized additive model',
-    '95% confidence interval'
+    'iteration',
+    'average',
+    'luck (reference)'
   ),
-  lty = c(2, 1, NA),
-  pch = c(NA, NA, 15),
-  col = c('black', 'black', 'grey80'),
-  lwd = 1*f,
-  cex = 0.8*f,
-  bty = 'n'
+  lty = c(3,1,2),
+  lwd = c(1*f, 2*f, 1*f),
+  col = c('black', 'black', 'black'),
+  bty = 'n',
+  cex = 0.67*f
+)
+title('(a)', cex.main = 0.8*f)
+
+# Supplemental Figure 6B
+plot(
+  perf_rr,
+  ylim = c(0,1),
+  xlim = c(0,1),
+  lty = 3,
+  xlab = 'true positive rate',
+  ylab = 'positive predictive value',
+  cex = 1*f,
+  cex.lab = 1*f
+)
+abline(
+  a = (nrow(case_locs)/nfld)/length(out$cv$cv_labels[[1]]),
+  b = 0,
+  lty = 2,
+  col = 'black',
+  lwd = 1*f
+)
+# Average PRREC
+lines(
+  colMeans(do.call(rbind, perf_rr@x.values)),
+  colMeans(do.call(rbind, perf_rr@y.values)),
+  col = 'black',
+  lty = 1,
+  lwd = 2*f
+) 
+title('(b)', cex.main = 0.8*f)
+legend(
+  x = 'bottomright',
+  inset = 0,
+  legend = c(
+    'iteration',
+    'average',
+    'luck (reference)'
+  ),
+  lty = c(3, 1, 2),
+  lwd = c(1*f, 2*f, 1*f),
+  col = c('black', 'black', 'black'),
+  bty = 'n',
+  cex = 0.67*f
 )
 dev.off()
 
