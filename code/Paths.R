@@ -1,24 +1,27 @@
-# ----------------------------------------------------------------- #
+# ----------------------------------------------------------------------------------------------- #
 # Manuscript Data Paths (Public Version as Exemplar)
 # 
-# Author: Ian Buller, Ph.D., M.A. (GitHub: @idblr)
-# Date created: May 20, 2022
+# Created by: Ian Buller, Ph.D., M.A. (GitHub: @idblr)
+# Created on: 2022-05-20
 #
-# Modified on:
-# Modified by:
+# Most recently modified by: @idblr
+# Most recently modified on: 2024-06-30
 #
 # Notes:
-# A) You must change the path to `cdph_path` for your own directory
-# ----------------------------------------------------------------- #
+# A) You must change the file name in `cdph_path`
+# ----------------------------------------------------------------------------------------------- #
 
 # Path to CDPH coyote plague data
-cdph_path <- "INSERT PATH TO DATA"
+cdph_path <- file.path('data', 'cdph', 'INSERT NAME OF DATA FILE')
 
 # Path to save and access PRISM data
-prism_path <- paste(getwd(), "/data/prismtmp", sep = "")
+prism_path <- file.path('data', 'prism')
+
+# Path to save and access GADM data
+prism_path <- file.path('data', 'gadm')
 
 # Paths to access elevation data
-elevation_zip <- paste(prism_path, "/PRISM_us_dem_4km_bil.zip", sep = "") # ZIP file
-elevation_path <- paste(prism_path, "/PRISM_us_dem_4km_bil.bil", sep = "") # BIL file
+elevation_zip <- file.path(prism_path, 'PRISM_us_dem_4km_bil.zip') # ZIP file
+elevation_path <- file.path(prism_path, 'PRISM_us_dem_4km_bil.bil') # BIL file
 
-# -------------------------- END OF CODE -------------------------- #
+# ----------------------------------------- END OF CODE ----------------------------------------- #
