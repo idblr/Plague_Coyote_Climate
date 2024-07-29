@@ -45,9 +45,12 @@ sandbox.R
 README.html
 
 # Data
-*.rds
-*.Rdata
-data/prismtmp
+data/cdph/*
+!data/cdph/README.md
+data/prism/*
+!data/prism/README.md
+data/gadm/*
+!data/gadm/README.md
 
 # Data paths for code
 Paths_private.R
