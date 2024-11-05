@@ -1,25 +1,25 @@
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # Manuscript Figure 3
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # 
 # Created by: Ian Buller, Ph.D., M.A. (GitHub: @idblr)
 # Created on: 2022-05-20
 #
 # Most recently modified by: @idblr
-# Most recently modified on: 2024-07-01
+# Most recently modified on: 2024-08-06
 #
 # Notes:
 # A) See pre-steps to prepare for model run
-# B) 2022/06/29 - Changed color of 'sparse data' from black to white
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 
 # ----------- #
 # PREPARATION #
 # ----------- #
 
-# Step 1: You must download the elevation BIL zipfile at 4-km resolution from the PRISM data portal https://www.prism.oregonstate.edu/normals/
-# Step 2: Save the zipfile to the data directory in this repository
-# Step 3: Set your own data paths to data in 'Paths.R' file
+# Step 1: You must download the elevation BIL file at 4-km resolution from the 
+#         PRISM data portal https://www.prism.oregonstate.edu/normals/
+# Step 2: Save the BIL file to the data directory in this repository
+# Step 3: Set your own file paths to the data in the 'Paths.R' file
 
 # Use the code found in 'Preparation.R' and 'Paths.R' files
 ## Loads sixteen objects
@@ -48,7 +48,9 @@ source(file.path('code', 'Preparation.R'))
 # -------------- #
 
 # Color Selection
-plot.cols <- c('gold', 'blue3', 'cornflowerblue', 'grey80', 'firebrick1', 'firebrick4')
+plot.cols <- c(
+  'gold', 'blue3', 'cornflowerblue', 'grey80', 'firebrick1', 'firebrick4'
+)
 
 # -------- #
 # FIGURE 3 #
@@ -98,11 +100,21 @@ main_p <- ggplot() +
     na.value = 'transparent',
     guide = guide_legend(order = 3)
   ) +
-  geom_sf(data = CA_proj, fill = 'transparent', aes(color = 'white'), linetype = 1, size = 4) +
+  geom_sf(
+    data = CA_proj, 
+    fill = 'transparent', 
+    aes(color = 'white'), 
+    linetype = 1, 
+    size = 4
+  ) +
   labs(color = '', fill = '', value = '') +
-  guides(color = guide_legend(override.aes = list(fill = c('transparent', 'grey90')))) +
+  guides(
+    color = guide_legend(override.aes = list(fill = c('transparent', 'grey90')))
+  ) +
   coord_sf(
-    xlim = ext(predict_risk_reclass)[1:2], ylim = ext(predict_risk_reclass)[3:4], expand = TRUE
+    xlim = ext(predict_risk_reclass)[1:2], 
+    ylim = ext(predict_risk_reclass)[3:4], 
+    expand = TRUE
   ) +
   theme_minimal() +
   theme(
@@ -121,4 +133,4 @@ ggsave(
   device = png
 )
 
-# ----------------------------------------- END OF CODE ----------------------------------------- #
+# ---------------------------------- END OF CODE ---------------------------------- #

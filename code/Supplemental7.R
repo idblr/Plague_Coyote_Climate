@@ -1,24 +1,25 @@
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # Manuscript Supplemental Figure 7
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # 
 # Created by: Ian Buller, Ph.D., M.A. (GitHub: @idblr)
 # Created on: 2022-05-20
 #
 # Most recently modified by: @idblr
-# Most recently modified on: 2024-07-29
+# Most recently modified on: 2024-08-06
 #
 # Notes:
 # A) See pre-steps to prepare for model run
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 
 # ----------- #
 # PREPARATION #
 # ----------- #
 
-# Step 1: You must download the elevation BIL zipfile at 4-km resolution from the PRISM data portal https://www.prism.oregonstate.edu/normals/
-# Step 2: Save the zipfile to the data directory in this repository
-# Step 3: Set your own data paths to data in 'Paths.R' file
+# Step 1: You must download the elevation BIL file at 4-km resolution from the 
+#         PRISM data portal https://www.prism.oregonstate.edu/normals/
+# Step 2: Save the BIL file to the data directory in this repository
+# Step 3: Set your own file paths to the data in the 'Paths.R' file
 
 # Use the code found in 'Preparation.R' and 'Paths.R' files
 ## Loads sixteen objects
@@ -54,9 +55,20 @@ conserved_univar <- out_univar[out_univar$outside == FALSE, ]
 
 f <- 2.5 # Graphical expansion factor
 
-png(file = file.path('figures', 'SupplementalFigure7.png'), width = 6*f, height = 7*f, units = 'in', res = 200*f)
-layout(matrix(c(1,2,3,4,5,6,7,8,9,9), ncol = 2, byrow = TRUE), heights = c(0.23,0.23,0.23,0.23,0.08))
-par(pty = 'm', oma = c(0, 0, 0, 0), mar = c(5.1, 6.1, 1.1, 2.1), family = 'LM Roman 10')
+png(
+  file = file.path('figures', 'SupplementalFigure7.png'), 
+  width = 6*f, 
+  height = 7*f, 
+  units = 'in', 
+  res = 200*f
+)
+layout(
+  matrix(c(1, 2, 3, 4, 5, 6, 7, 8, 9, 9), ncol = 2, byrow = TRUE),
+  heights = c(0.23, 0.23, 0.23, 0.23, 0.08)
+)
+par(
+  pty = 'm', oma = c(0, 0, 0, 0), mar = c(5.1, 6.1, 1.1, 2.1), family = 'LM Roman 10'
+)
 # Precipitation
 plot.gam(
   gam(rr ~ s(ppt), data = conserved_univar),
@@ -221,4 +233,4 @@ legend(
 )
 dev.off()
 
-# ----------------------------------------- END OF CODE ----------------------------------------- #
+# ---------------------------------- END OF CODE ---------------------------------- #

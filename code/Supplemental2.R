@@ -1,24 +1,25 @@
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # Manuscript Supplemental Figure 2
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # 
 # Created by: Ian Buller, Ph.D., M.A. (GitHub: @idblr)
 # Created on: 2022-05-20
 #
 # Most recently modified by: @idblr
-# Most recently modified on: 2024-07-01
+# Most recently modified on: 2024-08-06
 #
 # Notes:
 # A) See pre-steps to prepare for model run
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 
 # ----------- #
 # PREPARATION #
 # ----------- #
 
-# Step 1: You must download the elevation BIL zipfile at 4-km resolution from the PRISM data portal https://www.prism.oregonstate.edu/normals/
-# Step 2: Save the zipfile to the data directory in this repository
-# Step 3: Set your own data paths to data in 'Paths.R' file
+# Step 1: You must download the elevation BIL file at 4-km resolution from the 
+#         PRISM data portal https://www.prism.oregonstate.edu/normals/
+# Step 2: Save the BIL file to the data directory in this repository
+# Step 3: Set your own file paths to the data in the 'Paths.R' file
 
 # Use the code found in 'Preparation.R' and 'Paths.R' files
 ## Loads sixteen objects
@@ -75,7 +76,11 @@ rbl <- round(rbs, digits = 2)
 
 f <- 4 # graphical expansion factor
 
-png(file = file.path('figures', 'SupplementalFigure2A.png'), width = 400*f, height = 480*f)
+png(
+  file = file.path('figures', 'SupplementalFigure2A.png'), 
+  width = 400*f, 
+  height = 480*f
+)
 par(family = 'LM Roman 10', mgp = c(0, 1, 0), mar = c(5, 1, 1, 1) + 0.1)
 image.plot(
   raster(proj_pc1),
@@ -86,7 +91,9 @@ image.plot(
   legend.shrink = 0.5,
   legend.mar = 5.1,
   horizontal = TRUE,
-  legend.args = list(text = 'principal component coefficient', line = 0.5*f, cex = 1*f),
+  legend.args = list(
+    text = 'principal component coefficient', line = 0.5*f, cex = 1*f
+  ),
   axis.args = list(at = rbs, labels = rbl, cex.axis = 1*f, mgp = c(3, 0.75, 0)*f)
 )
 plot(as(CA_proj, 'Spatial'), add = T, lwd = 1*f)
@@ -139,7 +146,11 @@ rbm <- which.min(abs(rbs - midpoint))
 rbs[rbm] <- midpoint
 rbl <- round(rbs, digits = 2)
 
-png(file = file.path('figures', 'SupplementalFigure2B.png'), width = 400*f, height = 480*f)
+png(
+  file = file.path('figures', 'SupplementalFigure2B.png'),
+  width = 400*f,
+  height = 480*f
+)
 par(family = 'LM Roman 10', mgp = c(0, 1, 0), mar = c(5, 1, 1, 1) + 0.1)
 image.plot(
   raster(proj_pc2),
@@ -150,7 +161,9 @@ image.plot(
   legend.shrink = 0.5,
   legend.mar = 5.1,
   horizontal = TRUE,
-  legend.args = list(text = 'principal component coefficient', line = 0.5*f, cex = 1*f),
+  legend.args = list(
+    text = 'principal component coefficient', line = 0.5*f, cex = 1*f
+  ),
   axis.args = list(at = rbs, labels = rbl, cex.axis = 1*f, mgp = c(3, 0.75, 0)*f)
 )
 plot(as(CA_proj, 'Spatial'), add = T, lwd = 1*f)
@@ -179,4 +192,4 @@ legend(
 )
 dev.off()
 
-# ----------------------------------------- END OF CODE ----------------------------------------- #
+# ---------------------------------- END OF CODE ---------------------------------- #

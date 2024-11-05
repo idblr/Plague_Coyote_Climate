@@ -1,30 +1,32 @@
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # Preparation for Manuscript Figures
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # 
 # Created by: Ian Buller, Ph.D., M.A. (GitHub: @idblr)
 # Created on: 2022-05-20
 #
 # Most recently modified by: @idblr
-# Most recently modified on: 2024-06-30
+# Most recently modified on: 2024-08-06
 #
 # Notes:
-# Step 1: You must download the elevation BIL zip file at 4-km resolution from the PRISM data portal
-#         https://www.prism.oregonstate.edu/normals/
-# Step 2: Save the zip file to the 'prism' subdirectory within the 'data' directory of this repository
-# Step 3: Set your own data paths to data in 'Paths.R' file
-# ----------------------------------------------------------------------------------------------- #
+# Step 1: You must download the elevation BIL file at 4-km resolution from the 
+#         PRISM data portal: https://www.prism.oregonstate.edu/normals/
+# Step 2: Save the BIL file to the 'prism' subdirectory within the 'data' directory 
+#         of this repository
+# Step 3: Set your own file paths to the data in the 'Paths.R' file
+# --------------------------------------------------------------------------------- #
 
-# -------- #
-# PACKAGES #
-# -------- #
+# --------- #
+# LIBRARIES #
+# --------- #
 
 cat('Loading Packages...')
 
 loadedPackages <- c(
-  'dplyr', 'cowplot', 'cvAUC', 'envi', 'extrafont', 'fields', 'geodata', 'ggnewscale', 'ggplot2',
-  'graphics', 'grDevices', 'grid', 'latticeExtra', 'mgcv', 'png', 'prism', 'raster', 'RColorBrewer',
-  'ROCR', 'RStoolbox', 'sf', 'sp', 'stats', 'terra', 'tidyterra', 'utils'
+  'dplyr', 'cowplot', 'cvAUC', 'envi', 'extrafont', 'fields', 'geodata', 
+  'ggnewscale', 'ggplot2', 'graphics', 'grDevices', 'grid', 'latticeExtra', 'mgcv',
+  'png', 'prism', 'raster', 'RColorBrewer', 'ROCR', 'RStoolbox', 'sf', 'sp', 
+  'stats', 'terra', 'tidyterra', 'utils'
 )
 suppressMessages(lapply(loadedPackages, require, character.only = TRUE))
 
@@ -46,10 +48,10 @@ options(prism.path = prism_path)
 suppressMessages(font_import(pattern = 'lmroman10*', prompt = FALSE)) 
 
 # Assign RNG
-set.seed(88751) # reproducibility with manuscript (should only affect cross validation)
+set.seed(88751) # reproducibility with manuscript (only affects cross validation)
 # ## uncomment for new random seed
 # initial_seed <- as.integer(Sys.time())
-# the_seed <- initial_seed %% 100000 # take the trailing five digits of the initial seed
+# the_seed <- initial_seed %% 100000 # the trailing five digits of the initial seed
 # set.seed(the_seed)
 
 # Number of Cross-Validation Folds
@@ -62,25 +64,34 @@ nfld <- 25
 cat('Loading Data...')
 
 # Canada and Mexico
-canada <- suppressMessages(gadm(country = 'Canada', level = 1, path = file.path('data', 'gadm')))
+canada <- suppressMessages(gadm(
+  country = 'Canada', level = 1, path = file.path('data', 'gadm')
+))
 canada <- canada[canada$NAME_1 %in% c('British Columbia', 'Alberta', 'Saskatchewan')]
-mx <- suppressMessages(gadm(country = 'Mexico', level = 1, path = file.path('data', 'gadm')))
+mx <- suppressMessages(gadm(
+  country = 'Mexico', level = 1, path = file.path('data', 'gadm')
+))
 mx <- mx[mx$NAME_1 %in% c('Baja California', 'Sonora', 'Chihuahua')]
 
 # US Polygon Data
 ## State-level
-us <- suppressMessages(gadm(country = 'USA', level = 1, path = file.path('data', 'gadm')))
+us <- suppressMessages(gadm(
+  country = 'USA', level = 1, path = file.path('data', 'gadm')
+))
 pacs <- us[us$NAME_1 %in% c(
   'California', 'Arizona', 'Nevada', 'Utah', 'Idaho', 'Oregon'
   #, 'Washington', 'Montana', 'Wyoming', 'Colorado', 'New Mexico'
 )]
 suppressWarnings(pacs_proj <- project(pacs, crs('EPSG:26910')))
 ca_state <- us[match(toupper('California'), toupper(us$NAME_1)), ]
-suppressWarnings(ca_buffer <- buffer(ca_state, width = 2000)) # Add 2-km buffer to capture all of PRISM
+# Add 2-km buffer to capture all of PRISM
+suppressWarnings(ca_buffer <- buffer(ca_state, width = 2000)) 
 suppressWarnings(CA_proj <- project(ca_state, crs('EPSG:26910')))
 ca_buffer_proj <- project(ca_buffer, crs('EPSG:26910'))
 ## County-level
-counties <- suppressMessages(gadm(country = 'USA', level = 2, path = file.path('data', 'gadm')))
+counties <- suppressMessages(gadm(
+  country = 'USA', level = 2, path = file.path('data', 'gadm')
+))
 counties$OBJECTID <- row.names(counties)
 ca <- counties[counties$NAME_1 %in% 'California', ]
 
@@ -88,49 +99,38 @@ ca <- counties[counties$NAME_1 %in% 'California', ]
 cdph_coyote <- read.csv(cdph_path) 
 cdph_coyote_sp <- subset(cdph_coyote, GCL < 4)
 cdph_coyote_sp <- cdph_coyote_sp[cdph_coyote_sp$Long_QC != 0, ]
-cdph_coyote_sp <- st_as_sf(cdph_coyote_sp, coords = c('Long_QC', 'Lat_QC'), remove = FALSE)
-st_crs(cdph_coyote_sp) <- st_crs(crs(ca_state)) # CDPH metadata: coordinates at WGS84, same as GADM data
+cdph_coyote_sp <- st_as_sf(
+  cdph_coyote_sp, coords = c('Long_QC', 'Lat_QC'), remove = FALSE
+)
+# CDPH metadata: coordinates at WGS84, same as GADM data
+st_crs(cdph_coyote_sp) <- st_crs(crs(ca_state)) 
 cdph_coyote_sp$Long <- cdph_coyote_sp$Long_QC
 cdph_coyote_sp$Lat <- cdph_coyote_sp$Lat_QC
 
 # Download PRISM data
-## NOTE: Below will automatically load version M4 (1991-2020). This analysis used M3 (1981-2010)
-# suppressMessages(
-#   capture.output(
-#     get_prism_normals(type = 'ppt', resolution = '4km', annual = TRUE, keepZip = FALSE)
-#   )
-# )
-# suppressMessages(
-#   capture.output(
-#     get_prism_normals(type = 'tdmean', resolution = '4km', annual = TRUE, keepZip = FALSE)
-#   )
-# )
-# suppressMessages(
-#   capture.output(
-#     get_prism_normals(type = 'tmax', resolution = '4km', annual = TRUE, keepZip = FALSE)
-#   )
-# )
-# suppressMessages(
-#   capture.output(
-#     get_prism_normals(type = 'tmean', resolution = '4km', annual = TRUE, keepZip = FALSE)
-#   )
-# )
-# suppressMessages(
-#   capture.output(
-#     get_prism_normals(type = 'tmin', resolution = '4km', annual = TRUE, keepZip = FALSE)
-#   )
-# )
-# suppressMessages(
-#   capture.output(
-#     get_prism_normals(type = 'vpdmax', resolution = '4km', annual = TRUE, keepZip = FALSE)
-#   )
-# )
-# suppressMessages(
-#   capture.output(
-#     get_prism_normals(type = 'vpdmin', resolution = '4km', annual = TRUE, keepZip = FALSE)
-#   )
-# )
-# 
+# NOTE: Below will automatically load version M4 (1991-2020). 
+#       This analysis used M3 (1981-2010)
+# suppressMessages(capture.output(get_prism_normals(
+#   type = 'ppt', resolution = '4km', annual = TRUE, keepZip = FALSE
+# )))
+# suppressMessages(capture.output(get_prism_normals(
+#   type = 'tdmean', resolution = '4km', annual = TRUE, keepZip = FALSE
+# )))
+# suppressMessages(capture.output(get_prism_normals(
+#   type = 'tmax', resolution = '4km', annual = TRUE, keepZip = FALSE
+# )))
+# suppressMessages(capture.output(get_prism_normals(
+#   type = 'tmean', resolution = '4km', annual = TRUE, keepZip = FALSE
+# )))
+# suppressMessages(capture.output(get_prism_normals(
+#   type = 'tmin', resolution = '4km', annual = TRUE, keepZip = FALSE
+# )))
+# suppressMessages(capture.output(get_prism_normals(
+#   type = 'vpdmax', resolution = '4km', annual = TRUE, keepZip = FALSE
+# )))
+# suppressMessages(capture.output(get_prism_normals(
+#   type = 'vpdmin', resolution = '4km', annual = TRUE, keepZip = FALSE
+# )))
 # unzip(zipfile = elevation_zip, exdir = file.path('data', 'prism'))
 
 # Convert to Rasters
@@ -156,13 +156,20 @@ reproj_vpdmin <- project(vpdmin, crs(ca_state))
 reproj_elev <- project(elev, crs(ca_state))
 
 # Scale Rasters by Range Transformation (can do other scaling)
-scaled_reproj_ppt <- (reproj_ppt-minmax(reproj_ppt)[1])/diff(minmax(reproj_ppt))
-scaled_reproj_tdmean <- (reproj_tdmean-minmax(reproj_tdmean)[1])/diff(minmax(reproj_tdmean))
-scaled_reproj_tmax <- (reproj_tmax-minmax(reproj_tmax)[1])/diff(minmax(reproj_tmax))
-scaled_reproj_tmean <- (reproj_tmean-minmax(reproj_tmean)[1])/diff(minmax(reproj_tmean))
-scaled_reproj_tmin <- (reproj_tmin-minmax(reproj_tmin)[1])/diff(minmax(reproj_tmin))
-scaled_reproj_vpdmax <- (reproj_vpdmax-minmax(reproj_vpdmax)[1])/diff(minmax(reproj_vpdmax))
-scaled_reproj_vpdmin <- (reproj_vpdmin-minmax(reproj_vpdmin)[1])/diff(minmax(reproj_vpdmin))
+scaled_reproj_ppt <- 
+  (reproj_ppt-minmax(reproj_ppt)[1])/diff(minmax(reproj_ppt))
+scaled_reproj_tdmean <- 
+  (reproj_tdmean-minmax(reproj_tdmean)[1])/diff(minmax(reproj_tdmean))
+scaled_reproj_tmax <- 
+  (reproj_tmax-minmax(reproj_tmax)[1])/diff(minmax(reproj_tmax))
+scaled_reproj_tmean <- 
+  (reproj_tmean-minmax(reproj_tmean)[1])/diff(minmax(reproj_tmean))
+scaled_reproj_tmin <- 
+  (reproj_tmin-minmax(reproj_tmin)[1])/diff(minmax(reproj_tmin))
+scaled_reproj_vpdmax <- 
+  (reproj_vpdmax-minmax(reproj_vpdmax)[1])/diff(minmax(reproj_vpdmax))
+scaled_reproj_vpdmin <- 
+  (reproj_vpdmin-minmax(reproj_vpdmin)[1])/diff(minmax(reproj_vpdmin))
 
 # Raster Stack for PCA
 rasters_scaled <- c(
@@ -262,14 +269,17 @@ lrr_raster <- rast(out_lrr)
 ## truncate values to show more variability near null expectation
 lrr_raster[lrr_raster <= -minmax(lrr_raster)[2]] <- -minmax(lrr_raster)[2]
 
-## Create separate layer for climate profiles outside inner polygon or 'extent of coyote data' (i.e., 'sparse data')
+## Create separate layer for climate profiles outside inner polygon or 
+## 'extent of coyote data' (i.e., 'sparse data')
 inner_poly <- st_polygon(x = out$out$inner_poly)
 predict_pts <- st_as_sf(
   out$out$predict, 
   coords = c('predict_locs.pc1', 'predict_locs.pc2'), 
   remove = FALSE
 )
-predict_pts$outside <- sapply(st_intersects(predict_pts, inner_poly), function(x){length(x) == 0})
+predict_pts$outside <- sapply(
+  st_intersects(predict_pts, inner_poly), function(x){length(x) == 0}
+)
 predict_pts <- st_as_sf(
   st_drop_geometry(predict_pts), 
   coords = c('predict_locs.x', 'predict_locs.y'), 
@@ -291,7 +301,8 @@ reclass_naband <- project(reclass_naband, crs(CA_proj))
 predict_risk_reclass <- predict_risk
 predict_risk_reclass <- project(predict_risk_reclass, crs(CA_proj))
 ## truncate values to show more variability near null expectation
-predict_risk_reclass[predict_risk_reclass <= -minmax(predict_risk_reclass)[2]] <- -minmax(predict_risk_reclass)[2]
+predict_risk_reclass[predict_risk_reclass <= -minmax(predict_risk_reclass)[2]] <- 
+  -minmax(predict_risk_reclass)[2]
 
 predict_sparse_reclass <- c(predict_sparse, predict_risk)
 names(predict_sparse_reclass) <- c('outside', 'rr')
@@ -299,10 +310,18 @@ predict_sparse_reclass$sparse <- predict_sparse_reclass$outside == 1 &
   is.finite(predict_sparse_reclass$rr) &
   !is.na(predict_sparse_reclass$rr)
 
-predict_sparse_reclass <- clamp(predict_sparse_reclass$sparse, lower = 1, value = FALSE)
-predict_sparse_reclass <- subst(predict_sparse_reclass$sparse, 1, 'sparse coyote data')
+predict_sparse_reclass <- clamp(
+  predict_sparse_reclass$sparse, lower = 1, value = FALSE
+)
+predict_sparse_reclass <- subst(
+  predict_sparse_reclass$sparse, 1, 'sparse coyote data'
+)
 na_risk <- project(predict_sparse_reclass, crs(CA_proj))
-na_risk <- mask(as.polygons(na_risk, aggregate = FALSE), as.polygons(reclass_naband), inverse = TRUE)
+na_risk <- mask(
+  as.polygons(na_risk, aggregate = FALSE),
+  as.polygons(reclass_naband),
+  inverse = TRUE
+)
 
 # Figure 3
 reclass_tol <- classify(predict_pval, c(-Inf, 0.005, 0.025,  0.975,  0.995,  Inf))
@@ -314,7 +333,8 @@ arrow1 <-  layout.north.arrow(type = 1)
 ### shift the coordinates
 ### shift = c(x,y) direction
 Narrow1 <- st_as_sf(arrow1)
-st_geometry(Narrow1) <- st_geometry(Narrow1) + c(ext(ca_buffer)[1] + 0.25, ext(ca_buffer)[3] + 0.25)
+st_geometry(Narrow1) <- st_geometry(Narrow1) + 
+  c(ext(ca_buffer)[1] + 0.25, ext(ca_buffer)[3] + 0.25)
 st_crs(Narrow1) <- crs_us
 Narrow2 <- st_transform(Narrow1, crs(CA_proj)) # NAD83/UTM Zone 10N
 
@@ -334,7 +354,8 @@ out_univar <- data.frame(
   elev = extract(reproj_elev, predict_locs[ , 1:2], ID = FALSE)
 )
 names(out_univar) <- c(
-  'rr', 'pval', 'outside', 'ppt', 'tmax', 'tmean', 'tmin', 'tdmean', 'vpdmax', 'vpdmin', 'elev'
+  'rr', 'pval', 'outside', 'ppt', 'tmax', 'tmean', 
+  'tmin', 'tdmean', 'vpdmax', 'vpdmin', 'elev'
 )
 out_univar <- na.omit(out_univar[is.finite(out_univar$rr), ]) # remove NAs
 
@@ -348,9 +369,9 @@ rm(
   list = setdiff(
     ls(), 
     c(
-      'ca', 'ca_buffer', 'ca_buffer_proj', 'CA_proj', 'cdph_coyote_sp', 'mask_pc1', 'mask_pc2', 
-      'crs_us', 'lrr_raster', 'predict_risk_reclass', 'Narrow2', 'nfld', 'obs_dat', 'out', 
-      'out_univar', 'reclass_tol'
+      'ca', 'ca_buffer', 'ca_buffer_proj', 'CA_proj', 'cdph_coyote_sp', 'mask_pc1',
+      'mask_pc2', 'crs_us', 'lrr_raster', 'predict_risk_reclass', 'Narrow2', 'nfld',
+      'obs_dat', 'out', 'out_univar', 'reclass_tol'
     )
   )
 )

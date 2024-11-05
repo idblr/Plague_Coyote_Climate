@@ -1,24 +1,25 @@
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # Manuscript Supplemental Figure 4
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # 
 # Created by: Ian Buller, Ph.D., M.A. (GitHub: @idblr)
 # Created on: 2022-05-20
 #
 # Most recently modified by: @idblr
-# Most recently modified on: 2024-07-01
+# Most recently modified on: 2024-08-06
 #
 # Notes:
 # A) See pre-steps to prepare for model run
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 
 # ----------- #
 # PREPARATION #
 # ----------- #
 
-# Step 1: You must download the elevation BIL zipfile at 4-km resolution from the PRISM data portal https://www.prism.oregonstate.edu/normals/
-# Step 2: Save the zipfile to the data directory in this repository
-# Step 3: Set your own data paths to data in 'Paths.R' file
+# Step 1: You must download the elevation BIL file at 4-km resolution from the 
+#         PRISM data portal https://www.prism.oregonstate.edu/normals/
+# Step 2: Save the BIL file to the data directory in this repository
+# Step 3: Set your own file paths to the data in the 'Paths.R' file
 
 # Use the code found in 'Preparation.R' and 'Paths.R' files
 ## Loads sixteen objects
@@ -69,9 +70,17 @@ out_yrow_cas <- out$out$obs$f$z$yrow
 # Visualizing observed kernel densities and density ratio
 ## Densities of Cases and Controls
 f <- 2 # graphical expansion factor
-png(file = file.path('figures', 'SupplementalFigure4.png'), width = 8*f, height = 5*f, units = 'in', res = 200*f)
+png(
+  file = file.path('figures', 'SupplementalFigure4.png'), 
+  width = 8*f, 
+  height = 5*f, 
+  units = 'in', 
+  res = 200*f
+)
 layout(matrix(c(1, 2), ncol = 2, byrow = TRUE), heights = 1)
-par(oma = c(0, 0, 0, 0), mar = c(0.1, 5.1, 4.1, 2.1), pty = 's',family = 'LM Roman 10')
+par(
+  oma = c(0, 0, 0, 0), mar = c(0.1, 5.1, 4.1, 2.1), pty = 's',family = 'LM Roman 10'
+)
 
 # Supplemental Figure 4A
 plot(
@@ -106,7 +115,8 @@ legend(
   inset = 0,
   ncol = 1,
   legend = c(
-    'seropositive location', 'one bandwidth', 'extent of coyote data', 'extent of climate data'
+    'seropositive location', 'one bandwidth', 'extent of coyote data', 
+    'extent of climate data'
   ),
   col = c('firebrick4', 'black', 'gold', 'gold'),
   lwd = 1*f,
@@ -149,7 +159,8 @@ legend(
   inset = 0,
   ncol = 1,
   legend = c(
-    'seronegative location', 'one bandwidth', 'extent of coyote data', 'extent of climate data'
+    'seronegative location', 'one bandwidth', 'extent of coyote data', 
+    'extent of climate data'
   ),
   col = c('blue3', 'black', 'gold', 'gold'),
   lwd = 1*f,
@@ -160,4 +171,4 @@ legend(
 )
 dev.off()
 
-# ----------------------------------------- END OF CODE ----------------------------------------- #
+# ---------------------------------- END OF CODE ---------------------------------- #

@@ -1,24 +1,25 @@
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # Manuscript Figure 1
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # 
 # Created by: Ian Buller, Ph.D., M.A. (GitHub: @idblr)
 # Created on: 2022-05-20
 #
 # Most recently modified by: @idblr
-# Most recently modified on: 2024-07-01
+# Most recently modified on: 2024-08-06
 #
 # Notes:
 # A) See pre-steps to prepare for model run
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 
 # ----------- #
 # PREPARATION #
 # ----------- #
 
-# Step 1: You must download the elevation BIL zipfile at 4-km resolution from the PRISM data portal https://www.prism.oregonstate.edu/normals/
-# Step 2: Save the zipfile to the data directory in this repository
-# Step 3: Set your own data paths to data in 'Paths.R' file
+# Step 1: You must download the elevation BIL file at 4-km resolution from the 
+#         PRISM data portal https://www.prism.oregonstate.edu/normals/
+# Step 2: Save the BIL file to the data directory in this repository
+# Step 3: Set your own file paths to the data in the 'Paths.R' file
 
 # Use the code found in 'Preparation.R' and 'Paths.R' files
 ## Loads sixteen objects
@@ -46,7 +47,9 @@ source(file.path('code', 'Preparation.R'))
 # -------------- #
 
 # Color Selection
-plot.cols <- c('yellow', 'blue3', 'cornflowerblue', 'grey80', 'firebrick1', 'firebrick4')
+plot.cols <- c(
+  'yellow', 'blue3', 'cornflowerblue', 'grey80', 'firebrick1', 'firebrick4'
+)
 
 # Custom Color Palette
 rho_hat_values <- as.vector(lrr_raster)
@@ -57,9 +60,13 @@ max_absolute_value <- max(rho_hat_values[is.finite(rho_hat_values)], na.rm = TRU
 min_absolute_value <- min(rho_hat_values[is.finite(rho_hat_values)], na.rm = TRUE)
 Thresh <- 0
 ## Make vector of colors for values below threshold
-rc1 <- colorRampPalette(colors = c(plot.cols[2], plot.cols[4]), space = 'Lab')(lowerhalf)
+rc1 <- colorRampPalette(
+  colors = c(plot.cols[2], plot.cols[4]), space = 'Lab'
+)(lowerhalf)
 ## Make vector of colors for values above threshold
-rc2 <- colorRampPalette(colors = c(plot.cols[4], plot.cols[6]), space = 'Lab')(upperhalf)
+rc2 <- colorRampPalette(
+  colors = c(plot.cols[4], plot.cols[6]), space = 'Lab'
+)(upperhalf)
 rampcols <- c(rc1, rc2)
 
 # Custom Color Breaks
@@ -73,8 +80,19 @@ rampbreaks <- c(rb1, rb2)
 
 f <- 2 # Graphical expansion factor
 
-png(file = file.path('figures', 'Figure1.png'), width = 5*f, height = 5*f, units = 'in', res = 200*f)
-par(oma = c(0, 0, 0, 1), mar = c(9.1, 6.1, 4.1, 4.1), pty = 'm', family = 'LM Roman 10')
+png(
+  file = file.path('figures', 'Figure1.png'), 
+  width = 5*f, 
+  height = 5*f, 
+  units = 'in', 
+  res = 200*f
+)
+par(
+  oma = c(0, 0, 0, 1), 
+  mar = c(9.1, 6.1, 4.1, 4.1), 
+  pty = 'm', 
+  family = 'LM Roman 10'
+)
 image.plot(
   lrr_raster,
   col = rampcols,
@@ -89,7 +107,11 @@ image.plot(
   cex.lab = 1.1*f,
   legend.shrink = 0.5,
   horizontal = TRUE,
-  legend.args = list(text = expression('log'~hat('RR')['coyote+']), line = 0.5*f, cex = 1*f),
+  legend.args = list(
+    text = expression('log'~hat('RR')['coyote+']), 
+    line = 0.5*f, 
+    cex = 1*f
+  ),
   axis.args = list(
     labels = c(
       expression(''<='-3.06'), '-1.53', '0', '1.53',
@@ -133,4 +155,4 @@ legend(
 )
 dev.off()
 
-# ----------------------------------------- END OF CODE ----------------------------------------- #
+# ---------------------------------- END OF CODE ---------------------------------- #

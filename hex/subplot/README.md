@@ -2,4 +2,4 @@
 ===
 <img src='../../hex/hex.png' width='120' align='right' />
 
-Place geographic boundary data here (data not included but obtained in ['Preparation.R'](code/Preparation.R)).
+Materials to generate the subplot for the manuscript code companion hexagon sticker.

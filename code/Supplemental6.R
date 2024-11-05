@@ -1,24 +1,25 @@
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # Manuscript Supplemental Figure 6
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 # 
 # Created by: Ian Buller, Ph.D., M.A. (GitHub: @idblr)
 # Created on: 2022-05-20
 #
 # Most recently modified by: @idblr
-# Most recently modified on: 2024-07-29
+# Most recently modified on: 2024-08-06
 #
 # Notes:
 # A) See pre-steps to prepare for model run
-# ----------------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------- #
 
 # ----------- #
 # PREPARATION #
 # ----------- #
 
-# Step 1: You must download the elevation BIL zipfile at 4-km resolution from the PRISM data portal https://www.prism.oregonstate.edu/normals/
-# Step 2: Save the zipfile to the data directory in this repository
-# Step 3: Set your own data paths to data in 'Paths.R' file
+# Step 1: You must download the elevation BIL file at 4-km resolution from the 
+#         PRISM data portal https://www.prism.oregonstate.edu/normals/
+# Step 2: Save the BIL file to the data directory in this repository
+# Step 3: Set your own file paths to the data in the 'Paths.R' file
 
 # Use the code found in 'Preparation.R' and 'Paths.R' files
 ## Loads sixteen objects
@@ -47,7 +48,9 @@ source(file.path('code', 'Preparation.R'))
 
 ## ROC AUC
 out_cv_rr <- cvAUC(lapply(out$cv$cv_predictions_rr, unlist), out$cv$cv_labels)
-out_ci_rr <- ci.cvAUC(lapply(out$cv$cv_predictions_rr, unlist), out$cv$cv_labels, confidence = 0.95)
+out_ci_rr <- ci.cvAUC(
+  lapply(out$cv$cv_predictions_rr, unlist), out$cv$cv_labels, confidence = 0.95
+)
 
 ## Precision Recall
 pred_rr <- prediction(lapply(out$cv$cv_predictions_rr, unlist),out$cv$cv_labels)
@@ -61,7 +64,13 @@ case_locs <- subset(obs_dat, obs_dat$mark == 1)
 
 f <- 2
 
-png(file = file.path('figures', 'SupplementalFigure6.png'), width = 8*f, height = 5*f, units = 'in', res = 200*f)
+png(
+  file = file.path('figures', 'SupplementalFigure6.png'), 
+  width = 8*f, 
+  height = 5*f, 
+  units = 'in', 
+  res = 200*f
+)
 layout(matrix(c(1, 2), ncol = 2, byrow = TRUE), heights = 1)
 par(mar = c(0.1, 5.1, 3.1, 4.1), pty = 's', family = 'LM Roman 10', cex.axis = 1*f)
 
@@ -76,7 +85,8 @@ plot(
   cex.lab = 1*f
 ) #Plot fold AUCs
 abline(0, 1, col = 'black', lty = 2, lwd = 1*f)
-plot(out_cv_rr$perf, col = 'black', avg = 'vertical', add = TRUE, lwd = 2*f) #Plot CV AUC
+#Plot CV AUC
+plot(out_cv_rr$perf, col = 'black', avg = 'vertical', add = TRUE, lwd = 2*f) 
 legend(
   x = 'bottomright',
   inset = 0,
@@ -136,4 +146,4 @@ legend(
 )
 dev.off()
 
-# ----------------------------------------- END OF CODE ----------------------------------------- #
+# ---------------------------------- END OF CODE ---------------------------------- #
